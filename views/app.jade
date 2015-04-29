@@ -1,0 +1,70 @@
+head
+    script(src="angular.min.js")
+    script(src="underscore-min.js")
+    script(src="config.js")
+    script(src="app.js")
+    script(src="chart.js")
+    link(rel="stylesheet",type="text/css",href="main.css")
+    link(rel="stylesheet",type="text/css",href="bootstrap.min.css")
+body(ng-app="app", ng-controller="AppCtrl")
+    table(cellpadding="50px")
+        tr
+            td(valign="top")
+                center(style="width:100%,padding:50px")
+                    div(style="padding-bottom:20px") Personal info
+                    table
+                        tr
+                            td.raise4(style="padding-right:20px") Name
+                            td
+                                input(type="text",ng-model="me.name")
+                            td
+                                button.btn(ng-click="load()") Load
+                        tr
+                            td.raise4(style="padding-right:20px") Password (if set)
+                            td
+                                input(type="password",ng-model="me.pw")
+                        tr
+                            td.raise4(style="padding-right:20px") New password
+                            td
+                                input(type="password",ng-model="pw")
+                            td
+                                button.btn(ng-click="setpw()") Set password
+
+                    div(style="padding:25px 0px", ng-repeat="parambox in params", ng-init="outerIndex = $index")
+                        div {{ parambox.text }}
+                        table(style="margin:0px 0px")
+                            tr(ng-repeat="param in parambox.values", ng-init="innerIndex = $index")
+                                td.raise4(style="padding-right:20px") {{ param[0] }}
+                                td
+                                    select(ng-model="me.values[outerIndex][innerIndex]", ng-options="x[1] as x[1] for x in selectors[param[1]]", ng-init="me.values[outerIndex][innerIndex] = selectors[param[1]][0][1]")
+                    button.btn(ng-click="submit()") Submit
+                    div(style="padding-bottom:5px") &nbsp;
+                    div My premine slice: {{ my_score / total_score * value }}
+            td(valign="top")
+                center(style="width:100%,padding:50px")
+                    div(style="padding-bottom:20px") All responses
+                    table
+                        tr
+                            td
+                                table
+                                    tr
+                                        td Name
+                                    tr(ng-repeat="p in people")
+                                        td {{ p.name }}
+                            td(ng-repeat="parambox in params", ng-init="outerIndex = $index")
+                                table
+                                    tr
+                                        td(ng-repeat="param in parambox.values") {{ param[0] }}
+                                    tr(ng-repeat="p in people")
+                                        td(ng-repeat="param in parambox.values", ng-init="innerIndex = $index") {{ p.values[outerIndex][innerIndex] }}
+        tr
+            td(valign="top")
+                center(style="width:100%,padding:50px")
+                    div(style="padding-bottom:20px") Tweak parameters
+                    table
+                        tr
+                            td.raise4 Amount to distribute
+                            td(colspan="3")
+                                input(type="text",ng-model="value")
+            td(valign="top")
+                canvas(id="preminechart",width="300",height="300")
